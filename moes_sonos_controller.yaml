@@ -105,8 +105,8 @@ action:
     sequence:
     - service: media_player.volume_set
       data:
-      volume_level: '{% set volume = state_attr(player, ''volume_level'') + stepsize
-        %} {{ 1.0 if volume > 1.0 else volume }}'
+        volume_level: '{% set volume = state_attr(player, ''volume_level'') + stepsize
+          %} {{ 1.0 if volume > 1.0 else volume }}'
       entity_id: !input media_player
     - delay:
         milliseconds: !input volume_delay
