@@ -39,7 +39,7 @@ blueprint:
           min: 5.0
           max: 50.0
           step: 5.0
-          unit_of_measurement: Num
+          unit_of_measurement: '%'
           mode: slider
     single_press:
       name: Single press
@@ -52,7 +52,7 @@ blueprint:
           - Mute
           multiple: false
           custom_value: false
-#  source_url: https://gist.github.com/erkr/a437ebcb98a2b5ba2deebabd02f5ffae
+  source_url: https://github.com/arankwende/HA-blueprints/blob/dcc5f36efe46644b1b651a8cf1d3b65808274871/moes_sonos_controller.yaml
 mode: single
 max_exceeded: silent
 
@@ -61,8 +61,6 @@ trigger:
   event_type: zha_event
   event_data:
     device_id: !input remote
-
-
 action:
 - variables:
     command: '{{ trigger.event.data.command }}'
@@ -73,10 +71,6 @@ action:
     steps: '{% if command != ''toggle'' %} {{ (trigger.event.data.args[1] / 12.5 )
       | int }} {% endif %}'
     step_percent: !input volume_steps
-#    press_step_percent: !input press_step_percent
-
-
-
 - choose:
   - conditions:
     - '{{ cluster_id == 6 }}'
@@ -87,6 +81,7 @@ action:
     - service: media_player.media_play_pause
       entity_id: !input media_player
     - delay: 0.5
+
   - conditions:
     - condition: trigger
     - '{{ cluster_id == 6 }}'
