@@ -117,7 +117,6 @@ action:
     - '{{ endpoint_id == 1 }}'
     - '{{ command == ''step'' }}'
     - '{{ mode == ''StepMode.Down'' }}'
-    - '{{ state_attr(player, ''volume_level'') is not none }}'
     sequence:
     - service: media_player.volume_set
       data:
