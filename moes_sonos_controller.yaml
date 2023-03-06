@@ -72,7 +72,7 @@ action:
       | int }} {% endif %}'
     step_percent: !input volume_steps
     player: !input media_player
-    stepsize: '{{ 1.0 / steps * step_percent}}'
+    stepsize: !input volume_steps
 
 - choose:
   - conditions:
@@ -128,21 +128,3 @@ action:
       entity_id: !input media_player
     - delay:
         milliseconds: !input volume_delay
-
-
-  - conditions:
-    - '{{ cluster_id == 8 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ command == ''step'' }}'
-    - '{{ mode == ''StepMode.Up'' }}'
-    sequence:
-    - service: media_player.volume_set
-      data:
-        volume_level: '{% set volume = state_attr(player, ''volume_level'') + stepsize
-          %} {{ 1.0 if volume > 1.0 else volume }}'
-      entity_id: !input media_player
-    - delay:
-        milliseconds: !input volume_delay
-
-
-
