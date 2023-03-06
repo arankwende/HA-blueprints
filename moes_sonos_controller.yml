@@ -1,0 +1,140 @@
+blueprint:
+  name: Moes Knob for sonos
+  description: Use your Moes knob to control sonos devices volume
+  domain: automation
+  input:
+    remote:
+      name: Remote
+      description: Moes rotary controller to use
+      selector:
+        device:
+          integration: zha
+          manufacturer: _TZ3000_4fjiwweb
+          model: TS004F
+          multiple: false
+    media_player:
+      name: Media Player
+      description: Media player which will be controlled with this automation.
+      selector:
+        entity:
+          domain: media_player
+          multiple: false
+    volume_delay:
+      name: Volume stepping delay
+      description: The minimal delay in milliseconds between sending new volume adjustments.
+      default: 500
+      selector:
+        number:
+          min: 100.0
+          max: 1000.0
+          step: 100.0
+          unit_of_measurement: msec
+          mode: slider
+    volume_steps:
+      name: Volume number of steps
+      description: The number of steps for volume adjustments.
+      default: 10
+      selector:
+        number:
+          min: 5.0
+          max: 50.0
+          step: 5.0
+          unit_of_measurement: Num
+          mode: slider
+    single_press:
+      name: Single press
+      description: Pause(default) or Mute on single press
+      default: Pause
+      selector:
+        select:
+          options:
+          - Pause
+          - Mute
+          multiple: false
+          custom_value: false
+#  source_url: https://gist.github.com/erkr/a437ebcb98a2b5ba2deebabd02f5ffae
+mode: single
+max_exceeded: silent
+
+trigger:
+- platform: event
+  event_type: zha_event
+  event_data:
+    device_id: !input remote
+
+
+action:
+- variables:
+    command: '{{ trigger.event.data.command }}'
+    cluster_id: '{{ trigger.event.data.cluster_id }}'
+    endpoint_id: '{{ trigger.event.data.endpoint_id }}'
+    mode: '{% if command != ''toggle'' %} {{ trigger.event.data.args[0] }} {% endif
+      %}'
+    steps: '{% if command != ''toggle'' %} {{ (trigger.event.data.args[1] / 12.5 )
+      | int }} {% endif %}'
+    step_percent: !input volume_steps
+#    press_step_percent: !input press_step_percent
+
+
+
+- choose:
+  - conditions:
+    - '{{ cluster_id == 6 }}'
+    - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''toggle'' }}'
+    - '{{ single_mode == ''Pause'' }}'
+    sequence:
+    - service: media_player.media_play_pause
+      entity_id: !input media_player
+    - delay: 0.5
+  - conditions:
+    - condition: trigger
+    - '{{ cluster_id == 6 }}'
+    - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''toggle'' }}'
+    - '{{ single_mode == ''Mute'' }}'
+    - '{{ state_attr(player, ''is_volume_muted'') is not none }}'
+    sequence:
+    - service: media_player.volume_mute
+      data:
+        is_volume_muted: '{{ state_attr(player, ''is_volume_muted'') == false }}'
+      entity_id: !input media_player
+    - delay: 0.5
+
+
+
+  - conditions:
+    - '{{ cluster_id == 8 }}'
+    - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''step'' }}'
+    - '{{ mode == ''StepMode.Up'' }}'
+    sequence:
+    - service: media_player.volume_set
+      data:
+      volume_level: '{% set volume = state_attr(player, ''volume_level'') + stepsize
+        %} {{ 1.0 if volume > 1.0 else volume }}'
+      entity_id: !input media_player
+    - delay:
+        milliseconds: !input volume_delay
+
+
+  - conditions:
+    - '{{ cluster_id == 8 }}'
+    - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''step'' }}'
+    - '{{ mode == ''StepMode.Down'' }}'
+    - '{{ state_attr(player, ''volume_level'') is not none }}'
+    sequence:
+    - service: media_player.volume_set
+      data:
+        volume_level: '{% set volume = state_attr(player, ''volume_level'') - stepsize
+          %} {{ 0.0 if volume < 0.0 else volume }}'
+      entity_id: !input media_player
+    - delay:
+        milliseconds: !input volume_delay
+
+
+
+
+
+
