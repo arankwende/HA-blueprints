@@ -71,6 +71,9 @@ action:
     steps: '{% if command != ''toggle'' %} {{ (trigger.event.data.args[1] / 12.5 )
       | int }} {% endif %}'
     step_percent: !input volume_steps
+    player: !input media_player
+    stepsize: '{{ 1.0 / steps }}'
+
 - choose:
   - conditions:
     - '{{ cluster_id == 6 }}'
