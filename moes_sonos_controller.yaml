@@ -83,7 +83,6 @@ action:
     - delay: 0.5
 
   - conditions:
-    - condition: trigger
     - '{{ cluster_id == 6 }}'
     - '{{ endpoint_id == 1 }}'
     - '{{ command == ''toggle'' }}'
