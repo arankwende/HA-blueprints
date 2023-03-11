@@ -71,7 +71,7 @@ action:
     - service: cover.toggle
       entity_id: !input curtains
   - conditions:
-    - '{{ cluster_id == 8 }}'
+    - '{{ cluster_id == 6 }}'
     - '{{ endpoint_id == 1 }}'
     - '{{ command == ''right'' }}'
     sequence:
@@ -94,7 +94,7 @@ action:
             "current_position") - stepsize, 0] | max, 0] | min }}   
       entity_id: !input curtains
   - conditions:
-    - '{{ cluster_id == 8 }}'
+    - '{{ cluster_id == 6 }}'
     - '{{ endpoint_id == 1 }}'
     - '{{ command == ''left'' }}'
     sequence:
