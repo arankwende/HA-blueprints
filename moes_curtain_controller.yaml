@@ -41,7 +41,7 @@ blueprint:
           - Scene
           multiple: false
           custom_value: false
-  source_url: https://github.com/arankwende/HA-blueprints/blob/dcc5f36efe46644b1b651a8cf1d3b65808274871/moes_sonos_controller.yaml
+  source_url: https://github.com/arankwende/HA-blueprints/blob/main/moes_curtain_controller.yaml
 mode: queued
 max: 10
 max_exceeded: silent
