@@ -1,6 +1,6 @@
 blueprint:
-  name: Moes Knob for sonos
-  description: Use your Moes knob to control sonos devices volume
+  name: Moes Knob for Zigbee Curtains
+  description: Use your Moes knob to control your zigbee curtains
   domain: automation
   input:
     remote:
@@ -12,12 +12,13 @@ blueprint:
           manufacturer: _TZ3000_4fjiwweb
           model: TS004F
           multiple: false
-    curtain:
+    curtains:
       name: Cover
       description: Curtain which will be controlled with this automation.
       selector:
         entity:
           domain: cover
+          multiple: true
     custom_stepsize:
       name: Step Size
       description: Percentage that the curtain will move each step
@@ -59,7 +60,7 @@ action:
       %}'
     steps: '{% if command != ''toggle'' %} {{ (trigger.event.data.args[1] / 12.5 )
       | int }} {% endif %}'
-    curtain2: !input curtain
+    curtain: !input curtains
     stepsize: !input custom_stepsize
 
 - choose:
@@ -70,7 +71,7 @@ action:
     - '{{ single_mode == ''Toggle'' }}'
     sequence:
     - service: cover.toggle
-      entity_id: !input curtain
+      entity_id: !input curtains
   - conditions:
     - '{{ cluster_id == 8 }}'
     - '{{ endpoint_id == 1 }}'
@@ -82,7 +83,7 @@ action:
           position: >
             {{ [[state_attr(cover,
             "current_position") - stepsize, 0] | max, 0] | min }}   
-      entity_id: !input curtain
+      entity_id: !input curtains
 
   - conditions:
     - '{{ cluster_id == 8 }}'
@@ -95,4 +96,4 @@ action:
           position: >
             {{ [[state_attr(cover,
             "current_position") + stepsize, 0] | max, 0] | min }}   
-      entity_id: !input curtain
+      entity_id: !input curtains
