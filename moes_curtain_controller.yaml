@@ -76,7 +76,7 @@ action:
     - '{{ command == ''step'' }}'
     - '{{ mode == ''StepMode.Up'' }}'
     sequence:
-    - service: media_player.volume_set
+    - service: cover.set_cover_position
       data:
           position: >
             {{ [[state_attr(cover,
@@ -89,7 +89,7 @@ action:
     - '{{ command == ''step'' }}'
     - '{{ mode == ''StepMode.Down'' }}'
     sequence:
-    - service: media_player.volume_set
+    - service: cover.set_cover_position
       data:
           position: >
             {{ [[state_attr(cover,
