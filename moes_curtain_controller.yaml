@@ -71,16 +71,15 @@ action:
 
 - choose:
   - conditions:
-    - conditions:
-        - '{{ cluster_id == 6 }}'
-        - '{{ endpoint_id == 1 }}'
-        - '{{ command == ''toggle'' }}'
-        - '{{ single_mode == ''Toggle'' }}'
-      sequence:
-        - service: cover.toggle
-          entity_id: !input curtain1
-        - service: cover.toggle
-          entity_id: !input curtain2
+      - '{{ cluster_id == 6 }}'
+      - '{{ endpoint_id == 1 }}'
+      - '{{ command == ''toggle'' }}'
+      - '{{ single_mode == ''Toggle'' }}'
+    sequence:
+      - service: cover.toggle
+        entity_id: !input curtain1
+      - service: cover.toggle
+        entity_id: !input curtain2
   - conditions:
     - condition: or
     - conditions:
