@@ -18,7 +18,7 @@ blueprint:
       selector:
         entity:
           domain: cover
-          multiple: false
+          multiple: true
     custom_stepsize:
       name: Step Size
       description: Percentage that the curtain will move each step
