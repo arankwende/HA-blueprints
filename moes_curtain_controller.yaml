@@ -67,7 +67,7 @@ action:
       %}'
     curtain_1: !input curtain1
     curtain_2: !input curtain2
-    stepsize: !input custom_stepsize * 0.01
+    stepsize: !input custom_stepsize
 
 - choose:
   - conditions:
