@@ -39,18 +39,18 @@ blueprint:
           mode: slider
     single_press:
       name: Single press
-      description: Toggle (default) or Scene on single press
+      description: Toggle (default) or Reset on single press #WIP
       default: Toggle
       selector:
         select:
           options:
           - Toggle
-          - Scene
+          - Reset
           multiple: false
           custom_value: false
   source_url: https://github.com/arankwende/HA-blueprints/blob/main/moes_curtain_controller.yaml
 mode: queued
-max: 10
+max: 3
 max_exceeded: silent
 
 trigger:
@@ -70,11 +70,11 @@ action:
     stepsize: !input custom_stepsize
 
 - choose:
-  - conditions:
-      - '{{ cluster_id == 6 }}'
+  - conditions: #Work IN PROGRESS
+      - '{{ cluster_id == 0 }}'
       - '{{ endpoint_id == 1 }}'
-      - '{{ command == ''toggle'' }}'
-      - '{{ single_mode == ''Toggle'' }}'
+      - '{{ command == ''toggle1'' }}'
+      - '{{ single_mode == ''Toggle1'' }}'
     sequence:
       - parallel:
         - service: cover.toggle
@@ -93,13 +93,13 @@ action:
           data:
               position: >
                 {{ [[state_attr(curtain_1,
-                "current_position") - stepsize, 0] | max, 100] | min }}   
+                "current_position") + stepsize, 0] | max, 100] | min }}   
           entity_id: !input curtain1
         - service: cover.set_cover_position
           data:
               position: >
                 {{ [[state_attr(curtain_2,
-                "current_position") - stepsize, 0] | max, 100] | min }}   
+                "current_position") + stepsize, 0] | max, 100] | min }}   
           entity_id: !input curtain2
   - conditions:
     - '{{ cluster_id == 8 }}'
@@ -112,13 +112,13 @@ action:
           data:
               position: >
                 {{ [[state_attr(curtain_1,
-                "current_position") - stepsize, 0] | max, 100] | min }}   
+                "current_position") + stepsize, 0] | max, 100] | min }}   
           entity_id: !input curtain1
         - service: cover.set_cover_position
           data:
               position: >
                 {{ [[state_attr(curtain_2,
-                "current_position") - stepsize, 0] | max, 100] | min }}   
+                "current_position") + stepsize, 0] | max, 100] | min }}   
           entity_id: !input curtain2
 
   - conditions:
@@ -131,13 +131,13 @@ action:
           data:
               position: >
                 {{ [[state_attr(curtain_1,
-                "current_position") + stepsize, 0] | max, 100] | min }}   
+                "current_position") - stepsize, 0] | max, 100] | min }}   
           entity_id: !input curtain1
         - service: cover.set_cover_position
           data:
               position: >
                 {{ [[state_attr(curtain_2,
-                "current_position") + stepsize, 0] | max, 100] | min }}   
+                "current_position") - stepsize, 0] | max, 100] | min }}   
           entity_id: !input curtain2
   - conditions:
     - '{{ cluster_id == 8 }}'
@@ -150,13 +150,13 @@ action:
           data:
               position: >
                 {{ [[state_attr(curtain_1,
-                "current_position") + stepsize, 0] | max, 100] | min }}   
+                "current_position") - stepsize, 0] | max, 100] | min }}   
           entity_id: !input curtain1
         - service: cover.set_cover_position
           data:
               position: >
                 {{ [[state_attr(curtain_2,
-                "current_position") + stepsize, 0] | max, 100] | min }}   
+                "current_position") - stepsize, 0] | max, 100] | min }}   
           entity_id: !input curtain2
 
 
