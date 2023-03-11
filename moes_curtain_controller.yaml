@@ -1,0 +1,112 @@
+blueprint:
+  name: Moes Knob for sonos
+  description: Use your Moes knob to control sonos devices volume
+  domain: automation
+  input:
+    remote:
+      name: Remote
+      description: Moes rotary controller to use
+      selector:
+        device:
+          integration: zha
+          manufacturer: _TZ3000_4fjiwweb
+          model: TS004F
+          multiple: false
+    curtain:
+      name: Cover
+      description: Curtain which will be controlled with this automation.
+      selector:
+        entity:
+          domain: media_player
+          multiple: true
+    custom_stepsize:
+      name: Step Size
+      description: Percentage that the curtain will move each step
+      default: 5
+      selector:
+        number:
+          min: 1.0
+          max: 40.0
+          step: 5.0
+          unit_of_measurement: '%'
+          mode: slider
+    single_press:
+      name: Single press
+      description: Toggle (default) or Scene on single press
+      default: Toggle
+      selector:
+        select:
+          options:
+          - Toggle
+          - Scene
+          multiple: false
+          custom_value: false
+  source_url: https://github.com/arankwende/HA-blueprints/blob/dcc5f36efe46644b1b651a8cf1d3b65808274871/moes_sonos_controller.yaml
+mode: queued
+max: 10
+max_exceeded: silent
+
+trigger:
+- platform: event
+  event_type: zha_event
+  event_data:
+    device_id: !input remote
+action:
+- variables:
+    command: '{{ trigger.event.data.command }}'
+    cluster_id: '{{ trigger.event.data.cluster_id }}'
+    endpoint_id: '{{ trigger.event.data.endpoint_id }}'
+    mode: '{% if command != ''toggle'' %} {{ trigger.event.data.args[0] }} {% endif
+      %}'
+    steps: '{% if command != ''toggle'' %} {{ (trigger.event.data.args[1] / 12.5 )
+      | int }} {% endif %}'
+    curtain: !input curtain
+    stepsize: !input custom_stepsize
+
+- choose:
+  - conditions:
+    - '{{ cluster_id == 6 }}'
+    - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''toggle'' }}'
+    - '{{ single_mode == ''Toggle'' }}'
+    sequence:
+    - service: cover.toggle
+      entity_id: !input curtain
+
+  - conditions:
+    - '{{ cluster_id == 6 }}'
+    - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''toggle'' }}'
+    - '{{ single_mode == ''Mute'' }}'
+    - '{{ state_attr(player, ''is_volume_muted'') is not none }}'
+    sequence:
+    - service: 
+      data:
+        is_volume_muted: '{{ state_attr(player, ''is_volume_muted'') == false }}'
+      entity_id: !input cover
+
+  - conditions:
+    - '{{ cluster_id == 8 }}'
+    - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''step'' }}'
+    - '{{ mode == ''StepMode.Up'' }}'
+    sequence:
+    - service: media_player.volume_set
+      data:
+          position: >
+            {{ [[state_attr(cover,
+            "current_position") - stepsize, 0] | max, 0] | min }}   
+      entity_id: !input cover
+
+  - conditions:
+    - '{{ cluster_id == 8 }}'
+    - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''step'' }}'
+    - '{{ mode == ''StepMode.Down'' }}'
+    sequence:
+    - service: media_player.volume_set
+      data:
+          position: >
+            {{ [[state_attr(cover,
+            "current_position") + stepsize, 0] | max, 0] | min }}   
+      entity_id: !input cover
