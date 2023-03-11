@@ -12,9 +12,16 @@ blueprint:
           manufacturer: _TZ3000_4fjiwweb
           model: TS004F
           multiple: false
-    curtains:
+    curtain1:
       name: Cover
-      description: Curtain which will be controlled with this automation.
+      description: The First curtain which will be controlled with this automation.
+      selector:
+        entity:
+          domain: cover
+          multiple: false
+    curtain2:
+      name: Cover
+      description: The second curtain which will be controlled with this automation.
       selector:
         entity:
           domain: cover
@@ -26,7 +33,7 @@ blueprint:
       selector:
         number:
           min: 1.0
-          max: 40.0
+          max: 100.0
           step: 5.0
           unit_of_measurement: '%'
           mode: slider
@@ -58,86 +65,84 @@ action:
     endpoint_id: '{{ trigger.event.data.endpoint_id }}'
     mode: '{% if command != ''toggle'' %} {{ trigger.event.data.args[0] }} {% endif
       %}'
-    curtain: !input curtains
-    stepsize: !input custom_stepsize
+    curtain_1: !input curtain1
+    curtain_2: !input curtain2
+    stepsize: !input custom_stepsize * 0.01
 
 - choose:
   - conditions:
-    - '{{ cluster_id == 6 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ command == ''toggle'' }}'
-    - '{{ single_mode == ''Toggle'' }}'
+    - condition: or
+      conditions:
+        - conditions:
+          - '{{ cluster_id == 6 }}'
+          - '{{ endpoint_id == 1 }}'
+          - '{{ command == ''toggle'' }}'
+          - '{{ single_mode == ''Toggle'' }}'
     sequence:
     - service: cover.toggle
-      entity_id: !input curtains
+      entity_id: !input curtain1
+    - service: cover.toggle
+      entity_id: !input curtain2
+    - condition: or
+      conditions:
+        - conditions:
+          - '{{ command == ''rotate_type'' }}'
+          - '{{ cluster_id == 6 }}'
+          - '{{ endpoint_id == 1 }}'
+          - '{{ mode == 0 }}'
+        - conditions:
+          - '{{ cluster_id == 6 }}'
+          - '{{ endpoint_id == 1 }}'
+          - '{{ command == ''right'' }}'
+        - conditions:
+          - '{{ cluster_id == 8 }}'
+          - '{{ endpoint_id == 1 }}'
+          - '{{ command == ''step'' }}'
+          - '{{ mode == ''StepMode.Up'' }}'
+      sequence:
+      - service: cover.set_cover_position
+        data:
+            position: >
+              {{ [[state_attr(curtain_1,
+              "current_position") - stepsize, 0] | max, 100] | min }}   
+        entity_id: !input curtain1
+      - service: cover.set_cover_position
+        data:
+            position: >
+              {{ [[state_attr(curtain_2,
+              "current_position") - stepsize, 0] | max, 100] | min }}   
+        entity_id: !input curtain2
+  
+    - condition: or
+      conditions:
+        - conditions:
+          - '{{ command == ''rotate_type'' }}'
+          - '{{ cluster_id == 6 }}'
+          - '{{ endpoint_id == 1 }}'
+          - '{{ mode == 1 }}'  
+        - conditions:
+          - '{{ cluster_id == 6 }}'
+          - '{{ endpoint_id == 1 }}'
+          - '{{ command == ''left'' }}'
+        - conditions:
+          - '{{ cluster_id == 8 }}'
+          - '{{ endpoint_id == 1 }}'
+          - '{{ command == ''step'' }}'
+          - '{{ mode == ''StepMode.Down'' }}'
+      sequence:
+      - service: cover.set_cover_position
+        data:
+            position: >
+              {{ [[state_attr(curtain_1,
+              "current_position") + stepsize, 0] | max, 100] | min }}   
+        entity_id: !input curtain1
+      - service: cover.set_cover_position
+        data:
+            position: >
+              {{ [[state_attr(curtain_2,
+              "current_position") + stepsize, 0] | max, 100] | min }}   
+        entity_id: !input curtain2
 
-  - conditions:
-    - '{{ command == ''rotate_type'' }}'
-    - '{{ cluster_id == 6 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ mode == 0 }}'
-    sequence:
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain,
-            "current_position") - stepsize, 0] | max, 0] | min }}   
-      entity_id: !input curtains
-  - conditions:
-    - '{{ cluster_id == 6 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ command == ''right'' }}'
-    sequence:
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain,
-            "current_position") - stepsize, 0] | max, 0] | min }}   
-      entity_id: !input curtains
-  - conditions:
-    - '{{ cluster_id == 8 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ command == ''step'' }}'
-    - '{{ mode == ''StepMode.Up'' }}'
-    sequence:
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain,
-            "current_position") - stepsize, 0] | max, 0] | min }}   
-      entity_id: !input curtains
-  - conditions:
-    - '{{ command == ''rotate_type'' }}'
-    - '{{ cluster_id == 6 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ mode == 1 }}'
-    sequence:
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain,
-            "current_position") + stepsize, 0] | max, 0] | min }}   
-      entity_id: !input curtains
-  - conditions:
-    - '{{ cluster_id == 6 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ command == ''left'' }}'
-    sequence:
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain,
-            "current_position") + stepsize, 0] | max, 0] | min }}   
-      entity_id: !input curtains
-  - conditions:
-    - '{{ cluster_id == 8 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ command == ''step'' }}'
-    - '{{ mode == ''StepMode.Down'' }}'
-    sequence:
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain,
-            "current_position") + stepsize, 0] | max, 0] | min }}   
-      entity_id: !input curtains
+
+
+
