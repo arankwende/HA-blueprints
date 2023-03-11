@@ -73,19 +73,6 @@ action:
     sequence:
     - service: cover.toggle
       entity_id: !input curtain
-
-  - conditions:
-    - '{{ cluster_id == 6 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ command == ''toggle'' }}'
-    - '{{ single_mode == ''Mute'' }}'
-    - '{{ state_attr(player, ''is_volume_muted'') is not none }}'
-    sequence:
-    - service: 
-      data:
-        is_volume_muted: '{{ state_attr(player, ''is_volume_muted'') == false }}'
-      entity_id: !input curtain
-
   - conditions:
     - '{{ cluster_id == 8 }}'
     - '{{ endpoint_id == 1 }}'
