@@ -61,7 +61,7 @@ action:
       %}'
     steps: '{% if command != ''toggle'' %} {{ (trigger.event.data.args[1] / 12.5 )
       | int }} {% endif %}'
-    curtain: !input curtain
+    #curtain: !input curtain
     stepsize: !input custom_stepsize
 
 - choose:
