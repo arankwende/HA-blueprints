@@ -83,20 +83,20 @@ action:
           entity_id: !input curtain2
   - conditions:
     - condition: or
-        - conditions:
-          - '{{ command == ''rotate_type'' }}'
-          - '{{ cluster_id == 6 }}'
-          - '{{ endpoint_id == 1 }}'
-          - '{{ mode == 0 }}'
-        - conditions:
-          - '{{ cluster_id == 6 }}'
-          - '{{ endpoint_id == 1 }}'
-          - '{{ command == ''right'' }}'
-        - conditions:
-          - '{{ cluster_id == 8 }}'
-          - '{{ endpoint_id == 1 }}'
-          - '{{ command == ''step'' }}'
-          - '{{ mode == ''StepMode.Up'' }}'
+    - conditions:
+      - '{{ command == ''rotate_type'' }}'
+      - '{{ cluster_id == 6 }}'
+      - '{{ endpoint_id == 1 }}'
+      - '{{ mode == 0 }}'
+    - conditions:
+      - '{{ cluster_id == 6 }}'
+      - '{{ endpoint_id == 1 }}'
+      - '{{ command == ''right'' }}'
+    - conditions:
+      - '{{ cluster_id == 8 }}'
+      - '{{ endpoint_id == 1 }}'
+      - '{{ command == ''step'' }}'
+      - '{{ mode == ''StepMode.Up'' }}'
     sequence:
       - service: cover.set_cover_position
         data:
@@ -112,20 +112,20 @@ action:
         entity_id: !input curtain2
   - conditions:
     - condition: or
-        - conditions:
-          - '{{ command == ''rotate_type'' }}'
-          - '{{ cluster_id == 6 }}'
-          - '{{ endpoint_id == 1 }}'
-          - '{{ mode == 1 }}'  
-        - conditions:
-          - '{{ cluster_id == 6 }}'
-          - '{{ endpoint_id == 1 }}'
-          - '{{ command == ''left'' }}'
-        - conditions:
-          - '{{ cluster_id == 8 }}'
-          - '{{ endpoint_id == 1 }}'
-          - '{{ command == ''step'' }}'
-          - '{{ mode == ''StepMode.Down'' }}'
+    - conditions:
+      - '{{ command == ''rotate_type'' }}'
+      - '{{ cluster_id == 6 }}'
+      - '{{ endpoint_id == 1 }}'
+      - '{{ mode == 1 }}'  
+    - conditions:
+      - '{{ cluster_id == 6 }}'
+      - '{{ endpoint_id == 1 }}'
+      - '{{ command == ''left'' }}'
+    - conditions:
+      - '{{ cluster_id == 8 }}'
+      - '{{ endpoint_id == 1 }}'
+      - '{{ command == ''step'' }}'
+      - '{{ mode == ''StepMode.Down'' }}'
     sequence:
       - service: cover.set_cover_position
         data:
