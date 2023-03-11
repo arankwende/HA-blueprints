@@ -12,7 +12,7 @@ blueprint:
           manufacturer: _TZ3000_4fjiwweb
           model: TS004F
           multiple: false
-    curtain:
+    curtain1:
       name: Cover
       description: Curtain which will be controlled with this automation.
       selector:
