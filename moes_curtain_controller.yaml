@@ -73,6 +73,17 @@ action:
   - conditions:
     - '{{ cluster_id == 8 }}'
     - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''right'' }}'
+    sequence:
+    - service: cover.set_cover_position
+      data:
+          position: >
+            {{ [[state_attr(cover,
+            "current_position") - stepsize, 0] | max, 0] | min }}   
+      entity_id: !input curtains
+  - conditions:
+    - '{{ cluster_id == 8 }}'
+    - '{{ endpoint_id == 1 }}'
     - '{{ command == ''step'' }}'
     - '{{ mode == ''StepMode.Up'' }}'
     sequence:
@@ -82,7 +93,17 @@ action:
             {{ [[state_attr(cover,
             "current_position") - stepsize, 0] | max, 0] | min }}   
       entity_id: !input curtains
-
+  - conditions:
+    - '{{ cluster_id == 8 }}'
+    - '{{ endpoint_id == 1 }}'
+    - '{{ command == ''left'' }}'
+    sequence:
+    - service: cover.set_cover_position
+      data:
+          position: >
+            {{ [[state_attr(cover,
+            "current_position") + stepsize, 0] | max, 0] | min }}   
+      entity_id: !input curtains
   - conditions:
     - '{{ cluster_id == 8 }}'
     - '{{ endpoint_id == 1 }}'
