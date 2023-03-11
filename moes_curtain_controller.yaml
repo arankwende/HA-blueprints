@@ -80,7 +80,7 @@ action:
     - service: cover.set_cover_position
       data:
           position: >
-            {{ [[state_attr(cover,
+            {{ [[state_attr(curtain,
             "current_position") - stepsize, 0] | max, 0] | min }}   
       entity_id: !input curtains
   - conditions:
@@ -91,7 +91,7 @@ action:
     - service: cover.set_cover_position
       data:
           position: >
-            {{ [[state_attr(cover,
+            {{ [[state_attr(curtain,
             "current_position") - stepsize, 0] | max, 0] | min }}   
       entity_id: !input curtains
   - conditions:
@@ -103,19 +103,19 @@ action:
     - service: cover.set_cover_position
       data:
           position: >
-            {{ [[state_attr(cover,
+            {{ [[state_attr(curtain,
             "current_position") - stepsize, 0] | max, 0] | min }}   
       entity_id: !input curtains
   - conditions:
     - '{{ command == ''rotate_type'' }}'
     - '{{ cluster_id == 6 }}'
     - '{{ endpoint_id == 1 }}'
-    - '{{ mode == 0 }}'
+    - '{{ mode == 1 }}'
     sequence:
     - service: cover.set_cover_position
       data:
           position: >
-            {{ [[state_attr(cover,
+            {{ [[state_attr(curtain,
             "current_position") + stepsize, 0] | max, 0] | min }}   
       entity_id: !input curtains
   - conditions:
@@ -126,7 +126,7 @@ action:
     - service: cover.set_cover_position
       data:
           position: >
-            {{ [[state_attr(cover,
+            {{ [[state_attr(curtain,
             "current_position") + stepsize, 0] | max, 0] | min }}   
       entity_id: !input curtains
   - conditions:
@@ -138,6 +138,6 @@ action:
     - service: cover.set_cover_position
       data:
           position: >
-            {{ [[state_attr(cover,
+            {{ [[state_attr(curtain,
             "current_position") + stepsize, 0] | max, 0] | min }}   
       entity_id: !input curtains
