@@ -14,7 +14,7 @@ blueprint:
           multiple: false
     curtain1:
       name: Cover
-      description: The First curtain which will be controlled with this automation.
+      description: The first curtain which will be controlled with this automation.
       selector:
         entity:
           domain: cover
