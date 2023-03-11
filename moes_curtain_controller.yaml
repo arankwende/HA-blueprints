@@ -97,19 +97,19 @@ action:
           - '{{ endpoint_id == 1 }}'
           - '{{ command == ''step'' }}'
           - '{{ mode == ''StepMode.Up'' }}'
-  sequence:
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain_1,
-            "current_position") - stepsize, 0] | max, 100] | min }}   
-      entity_id: !input curtain1
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain_2,
-            "current_position") - stepsize, 0] | max, 100] | min }}   
-      entity_id: !input curtain2
+    sequence:
+      - service: cover.set_cover_position
+        data:
+            position: >
+              {{ [[state_attr(curtain_1,
+              "current_position") - stepsize, 0] | max, 100] | min }}   
+        entity_id: !input curtain1
+      - service: cover.set_cover_position
+        data:
+            position: >
+              {{ [[state_attr(curtain_2,
+              "current_position") - stepsize, 0] | max, 100] | min }}   
+        entity_id: !input curtain2
   - conditions:
     - condition: or
       conditions:
@@ -127,19 +127,19 @@ action:
           - '{{ endpoint_id == 1 }}'
           - '{{ command == ''step'' }}'
           - '{{ mode == ''StepMode.Down'' }}'
-  sequence:
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain_1,
-            "current_position") + stepsize, 0] | max, 100] | min }}   
-      entity_id: !input curtain1
-    - service: cover.set_cover_position
-      data:
-          position: >
-            {{ [[state_attr(curtain_2,
-            "current_position") + stepsize, 0] | max, 100] | min }}   
-      entity_id: !input curtain2
+    sequence:
+      - service: cover.set_cover_position
+        data:
+            position: >
+              {{ [[state_attr(curtain_1,
+              "current_position") + stepsize, 0] | max, 100] | min }}   
+        entity_id: !input curtain1
+      - service: cover.set_cover_position
+        data:
+            position: >
+              {{ [[state_attr(curtain_2,
+              "current_position") + stepsize, 0] | max, 100] | min }}   
+        entity_id: !input curtain2
 
 
 
