@@ -16,9 +16,10 @@ blueprint:
       name: Cover
       description: Curtain which will be controlled with this automation.
       selector:
-        entity:
-          domain: cover
-          multiple: true
+        target:
+          entity:
+            domain: cover
+            multiple: true
     custom_stepsize:
       name: Step Size
       description: Percentage that the curtain will move each step
