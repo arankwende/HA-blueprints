@@ -83,7 +83,7 @@ action:
     - service: 
       data:
         is_volume_muted: '{{ state_attr(player, ''is_volume_muted'') == false }}'
-      entity_id: !input cover
+      entity_id: !input curtain
 
   - conditions:
     - '{{ cluster_id == 8 }}'
