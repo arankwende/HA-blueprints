@@ -58,8 +58,6 @@ action:
     endpoint_id: '{{ trigger.event.data.endpoint_id }}'
     mode: '{% if command != ''toggle'' %} {{ trigger.event.data.args[0] }} {% endif
       %}'
-    steps: '{% if command != ''toggle'' %} {{ (trigger.event.data.args[1] / 12.5 )
-      | int }} {% endif %}'
     curtain: !input curtains
     stepsize: !input custom_stepsize
 
