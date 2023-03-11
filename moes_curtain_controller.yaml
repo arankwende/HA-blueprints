@@ -96,7 +96,7 @@ action:
           position: >
             {{ [[state_attr(cover,
             "current_position") - stepsize, 0] | max, 0] | min }}   
-      entity_id: !input cover
+      entity_id: !input curtain
 
   - conditions:
     - '{{ cluster_id == 8 }}'
@@ -109,4 +109,4 @@ action:
           position: >
             {{ [[state_attr(cover,
             "current_position") + stepsize, 0] | max, 0] | min }}   
-      entity_id: !input cover
+      entity_id: !input curtain
