@@ -17,7 +17,7 @@ blueprint:
       description: Curtain which will be controlled with this automation.
       selector:
         entity:
-          domain: media_player
+          domain: cover
           multiple: true
     custom_stepsize:
       name: Step Size
