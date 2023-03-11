@@ -1,6 +1,6 @@
 blueprint:
-  name: Moes Knob for Zigbee Curtains
-  description: Use your Moes knob to control your zigbee curtains
+  name: Moes Knob for 2 Zigbee Curtains
+  description: Use your Moes knob to control two simultaneous zigbee curtains
   domain: automation
   input:
     remote:
