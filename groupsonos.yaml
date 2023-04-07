@@ -29,14 +29,14 @@ blueprint:
           min: 1
           max: 3600
           unit_of_measurement: seconds
-    custom_conditions:
-      name: Custom conditions
-      default: []
-      description: “A list of custom condititions that also have to be met before grouping the sonos. Only available via YAML mode”
+#    custom_conditions:
+#      name: Custom conditions
+#      default: []
+#      description: “A list of custom condititions that also have to be met before grouping the sonos. Only available via YAML mode”
     group_on_tv:
       name: Group on TV
       description: “Whether to also group the Sonos when the source is playing TV audio”
-      default: false
+      default: true
       selector:
         boolean:
 
