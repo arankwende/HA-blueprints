@@ -1,5 +1,5 @@
 blueprint:
-  name: Group Sonos on Motion
+  name: Sonos - Group Sonos on Motion
   description: 'Group a Sonos device to a main device when presence (e.g. motion) is detected and the main device is playing music. 
     Can be extended with custom conditions, for example, only group the Sonos when you’re not asleep.'
   domain: automation
@@ -57,7 +57,7 @@ trigger:
     to: “playing”
   - platform: homeassistant
     event: start
-    platform: event
+  - platform: event
     event_type: automation_reloaded
 
 condition:
