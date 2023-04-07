@@ -90,7 +90,7 @@ action:
           - service: media_player.join
             data:
               group_members: !input sonos_target
-              target:
+            target:
               entity_id: !input sonos_source
   - wait_for_trigger:
       platform: state
