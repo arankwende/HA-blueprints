@@ -1,7 +1,7 @@
 blueprint:
   name: Sonos - Group Sonos on Motion
-  description: 'Group a Sonos device to a main device when presence (e.g. motion) is detected and the main device is playing music. 
-    Can be extended with custom conditions, for example, only group the Sonos when you’re not asleep.'
+  description: "Group a Sonos device to a main device when presence (e.g. motion) is detected and the main device is playing music. 
+    Can be extended with custom conditions, for example, only group the Sonos when you’re not asleep."
   domain: automation
   input:
     presence_entity:
@@ -76,11 +76,13 @@ condition:
       - condition: state
         entity_id: !input sonos_target
         state: “idle”
+      - condition: template
+        value_template: "{{ sonos_target in state_attr(sonos_source, “group_members”) }}"
       #However, re-trigger the ‘action’ if we are already grouped to prevent early ungrouping
   - condition: and
     conditions: !input custom_conditions
-  - "{{ sonos_target in state_attr(sonos_source, “group_members”) }}"
-  - "{{ group_on_tv or state_attr(sonos_source, “source”) != “TV” }}"
+  - condition: template
+    value_template: "{{ group_on_tv or state_attr(sonos_source, “source”) != “TV” }}"
 action:
   # Only join when we have not already joined, since this would cause a 1 sec silence
   - choose:
