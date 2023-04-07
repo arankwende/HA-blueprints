@@ -77,12 +77,12 @@ condition:
         entity_id: !input sonos_target
         state: “idle”
       - condition: template
-        value_template: "{{ sonos_target in state_attr(sonos_source, 'group_members') }}"
+        value_template: "{{ sonos_target in state_attr(sonos_source, group_members) }}"
       #However, re-trigger the ‘action’ if we are already grouped to prevent early ungrouping
   - condition: and
     conditions: !input custom_conditions
   - condition: template
-    value_template: "{{ group_on_tv or state_attr(sonos_source, “source”) != “TV” }}"
+    value_template: "{{ group_on_tv or state_attr(sonos_source, source) != TV }}"
 action:
   # Only join when we have not already joined, since this would cause a 1 sec silence
   - choose:
